@@ -1,1 +1,4 @@
-# OC-Alert-System
+# Project 5 - Système d'alerte
+
+### Initialisations
+1. Création du projet Spring Boot via IntelliJ (https://github.com/Watch-Me-Fly/OC-Alert-System/commit/165b489574e92f4242c10254de6bac57978b396d)
