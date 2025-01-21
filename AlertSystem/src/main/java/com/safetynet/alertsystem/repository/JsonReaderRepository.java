@@ -2,6 +2,7 @@ package com.safetynet.alertsystem.repository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.alertsystem.model.Data;
+import lombok.Builder;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
