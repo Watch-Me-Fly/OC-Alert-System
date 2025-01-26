@@ -1,7 +1,6 @@
 package com.safetynet.alertsystem.controller;
 
 import com.safetynet.alertsystem.model.FireStation;
-import com.safetynet.alertsystem.model.Person;
 import com.safetynet.alertsystem.repository.JsonReaderRepository;
 import com.safetynet.alertsystem.service.FireStationService;
 import org.apache.logging.log4j.LogManager;
@@ -12,22 +11,24 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/firestation")
 public class FireStationController {
 
+    private final JsonReaderRepository jsonReader;
     private final FireStationService fireStationService;
+    private static final Logger logger = LogManager.getLogger(FireStationController.class);
 
     @Autowired
-    public FireStationController(FireStationService fireStationService) {
+    public FireStationController(FireStationService fireStationService, JsonReaderRepository jsonReader) {
         this.fireStationService = fireStationService;
+        this.jsonReader = jsonReader;
     }
 
-    @GetMapping
-    public Map<String, Integer> getFireStations() {
-        return fireStationService.getStationsMap();
+    @GetMapping("/list")
+    public List<FireStation> getFireStationsList() {
+        return jsonReader.getData().getFirestations();
     }
 
     @PostMapping
@@ -40,7 +41,7 @@ public class FireStationController {
     public ResponseEntity<String> updateFireStation(@RequestBody FireStation fireStation) {
         if (fireStationService.checkIfAddressExists(fireStation.getAddress())) {
             fireStationService.updateStationNumber(fireStation);
-            return ResponseEntity.ok("FireStation updated");
+            return ResponseEntity.status(HttpStatus.OK).body("FireStation updated");
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("FireStation not found for the given address");
@@ -51,10 +52,10 @@ public class FireStationController {
     public ResponseEntity<String> deleteFireStation(@PathVariable String address) {
         if (fireStationService.checkIfAddressExists(address)) {
             fireStationService.deleteStation(address);
-            return ResponseEntity.ok("FireStation deleted");
+            return ResponseEntity.status(HttpStatus.OK).body("FireStation deleted");
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("FireStation not found for the given address");
+                    .body("No firestation is found for the given address");
         }
     }
 
