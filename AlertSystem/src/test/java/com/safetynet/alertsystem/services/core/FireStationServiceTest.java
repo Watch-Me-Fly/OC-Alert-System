@@ -1,21 +1,17 @@
-package com.safetynet.alertsystem.services;
+package com.safetynet.alertsystem.services.core;
 
-import com.safetynet.alertsystem.model.FireStation;
-import com.safetynet.alertsystem.service.FireStationService;
+import com.safetynet.alertsystem.model.core.FireStation;
+import com.safetynet.alertsystem.service.core.FireStationService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.util.AssertionErrors.assertNull;
 
 @SpringBootTest
 public class FireStationServiceTest {

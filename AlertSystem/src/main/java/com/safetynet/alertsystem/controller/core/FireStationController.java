@@ -1,8 +1,8 @@
-package com.safetynet.alertsystem.controller;
+package com.safetynet.alertsystem.controller.core;
 
-import com.safetynet.alertsystem.model.FireStation;
+import com.safetynet.alertsystem.model.core.FireStation;
 import com.safetynet.alertsystem.repository.JsonReaderRepository;
-import com.safetynet.alertsystem.service.FireStationService;
+import com.safetynet.alertsystem.service.core.FireStationService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

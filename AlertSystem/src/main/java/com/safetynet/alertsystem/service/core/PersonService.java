@@ -1,6 +1,6 @@
-package com.safetynet.alertsystem.service;
+package com.safetynet.alertsystem.service.core;
 
-import com.safetynet.alertsystem.model.Person;
+import com.safetynet.alertsystem.model.core.Person;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

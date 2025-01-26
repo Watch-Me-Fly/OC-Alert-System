@@ -1,10 +1,10 @@
-package com.safetynet.alertsystem.controllers;
+package com.safetynet.alertsystem.controllers.core;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.safetynet.alertsystem.controller.MedicalRecordsController;
-import com.safetynet.alertsystem.model.MedicalRecord;
+import com.safetynet.alertsystem.controller.core.MedicalRecordsController;
+import com.safetynet.alertsystem.model.core.MedicalRecord;
 import com.safetynet.alertsystem.repository.JsonReaderRepository;
-import com.safetynet.alertsystem.service.MedicalRecordService;
+import com.safetynet.alertsystem.service.core.MedicalRecordService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

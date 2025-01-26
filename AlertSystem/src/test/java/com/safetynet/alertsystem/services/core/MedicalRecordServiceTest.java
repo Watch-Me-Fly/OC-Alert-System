@@ -1,16 +1,12 @@
-package com.safetynet.alertsystem.services;
+package com.safetynet.alertsystem.services.core;
 
-import com.safetynet.alertsystem.model.MedicalRecord;
-import com.safetynet.alertsystem.service.MedicalRecordService;
+import com.safetynet.alertsystem.model.core.MedicalRecord;
+import com.safetynet.alertsystem.service.core.MedicalRecordService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Arrays;
 import java.util.Map;

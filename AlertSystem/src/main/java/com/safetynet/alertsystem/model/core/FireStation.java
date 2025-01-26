@@ -1,4 +1,4 @@
-package com.safetynet.alertsystem.model;
+package com.safetynet.alertsystem.model.core;
 
 import lombok.*;
 
