@@ -1,17 +1,13 @@
 package com.safetynet.alertsystem.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.safetynet.alertsystem.controller.FireStationController;
 import com.safetynet.alertsystem.model.FireStation;
-import com.safetynet.alertsystem.repository.JsonReaderRepository;
-import com.safetynet.alertsystem.service.FireStationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -27,14 +23,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class FireStationControllerTest {
 
-    // @Mock
-    // private FireStationController controller;
-    @Mock
-    private FireStationService service;
     @Mock
     private FireStation station;
-    @Autowired
-    private JsonReaderRepository jsonReader;
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -43,7 +33,6 @@ public class FireStationControllerTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        // controller = new FireStationController(service, jsonReader);
         objectMapper = new ObjectMapper();
         station = new FireStation("123 sesame street", 4);
     }
@@ -97,6 +86,7 @@ public class FireStationControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(station)))
         .andExpect(MockMvcResultMatchers.status().isCreated());
+
         mockMvc.perform(MockMvcRequestBuilders.delete("/firestation/123 sesame street"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string("FireStation deleted"));
