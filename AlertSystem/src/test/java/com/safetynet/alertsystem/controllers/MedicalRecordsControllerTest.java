@@ -51,6 +51,14 @@ public class MedicalRecordsControllerTest {
                 Arrays.asList("Strawberries"));
     }
 
+    private void addMedicalRecord(MedicalRecord recordToAdd) throws Exception{
+        mockMvc.perform(post("/medicalRecord")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(recordToAdd)))
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.content().string("Medical record added"));
+    }
+
     @DisplayName("/medicalRecord/list Engpoint = 200 [OK]")
     @Test
     void testRecordsListOK() throws Exception {
@@ -59,20 +67,13 @@ public class MedicalRecordsControllerTest {
     @DisplayName("Add a record - OK")
     @Test
     void testAddingRecord() throws Exception {
-        mockMvc.perform(post("/medicalRecord")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(record)))
-                .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.content().string("Medical record added"));
+        addMedicalRecord(record);
     }
     @DisplayName("Update a record that exists")
     @Test
     void testUpdatingRecordOK() throws Exception {
 
-        mockMvc.perform(post("/medicalRecord")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(record)))
-                .andExpect(MockMvcResultMatchers.status().isCreated());
+        addMedicalRecord(record);
 
         MedicalRecord updatedRecord = new MedicalRecord("John",
                 "Doe",
@@ -105,10 +106,7 @@ public class MedicalRecordsControllerTest {
     @Test
     void testDeletingRecordOK() throws Exception {
 
-        mockMvc.perform(post("/medicalRecord")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(record)))
-                .andExpect(MockMvcResultMatchers.status().isCreated());
+        addMedicalRecord(record);
 
         mockMvc.perform(delete("/medicalRecord/John/Doe"))
                 .andExpect(MockMvcResultMatchers.status().isOk())

@@ -93,10 +93,10 @@ public class PersonServiceTests {
         updatedPerson.setZip(12435);
         updatedPerson.setEmail("johnny@doe.com");
 
-        when(personService.updatePerson("John", "Doe", updatedPerson)).thenReturn(updatedPerson);
+        when(personService.updatePerson(updatedPerson)).thenReturn(updatedPerson);
 
         // act
-        Person result = personService.updatePerson("John", "Doe", updatedPerson);
+        Person result = personService.updatePerson(updatedPerson);
 
         // assert
         assertNotNull(result);

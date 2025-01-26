@@ -11,24 +11,37 @@ public class PersonService {
 
     private final List<Person> people = new ArrayList<>();
 
+    public boolean checkIfPersonExists(String firstName, String lastName) {
+        for (Person person : people) {
+            if (person.getFirstName().equals(firstName)
+                    && person.getLastName().equals(lastName)) {
+                return true;
+            }
+        }
+        return false;
+    }
     // create
     public Person addPerson(Person person) {
         people.add(person);
         return person;
     }
     // read
-    public List<Person> getAllPeopleByName(String firstName, String lastName) {
+    public List<Person> getAllPeopleByName(String firstName, String lastName)
+    {
+        List<Person> persons = new ArrayList<>();
+
         for (Person person : people) {
             if (person.getFirstName().equals(firstName) && person.getLastName().equals(lastName)) {
-                people.add(person);
+                persons.add(person);
             }
         }
-        return people;
+        return persons;
     }
     // update
-    public Person updatePerson(String firstName, String lastName, Person updatedPerson) {
+    public Person updatePerson(Person updatedPerson)
+    {
         for (Person person : people) {
-            if (person.getFirstName().equals(firstName) && person.getLastName().equals(lastName)) {
+            if (person.getFirstName().equals(updatedPerson.getFirstName()) && person.getLastName().equals(updatedPerson.getLastName())) {
                 person.setAddress(updatedPerson.getAddress());
                 person.setCity(updatedPerson.getCity());
                 person.setZip(updatedPerson.getZip());

@@ -27,14 +27,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class FireStationControllerTest {
 
-    // @Mock
-    // private FireStationController controller;
-    @Mock
-    private FireStationService service;
     @Mock
     private FireStation station;
-    @Autowired
-    private JsonReaderRepository jsonReader;
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -43,7 +37,6 @@ public class FireStationControllerTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        // controller = new FireStationController(service, jsonReader);
         objectMapper = new ObjectMapper();
         station = new FireStation("123 sesame street", 4);
     }
@@ -97,6 +90,7 @@ public class FireStationControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(station)))
         .andExpect(MockMvcResultMatchers.status().isCreated());
+
         mockMvc.perform(MockMvcRequestBuilders.delete("/firestation/123 sesame street"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string("FireStation deleted"));
