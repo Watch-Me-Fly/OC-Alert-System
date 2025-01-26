@@ -45,7 +45,7 @@ public class FireStationServiceTest {
     // Read
     @DisplayName("Get firestation map")
     @Test
-    void getFirestationByAdress() {
+    void getFirestationMap() {
         // arrange
         FireStation fireStation = new FireStation("123 sesame street", 2);
         FireStation fireStation2 = new FireStation("456 something av.", 7);
@@ -56,6 +56,17 @@ public class FireStationServiceTest {
         // assert
         assertNotNull(fireStatoinMap);
         assertEquals(2, fireStatoinMap.size());
+    }
+    @DisplayName("Get firestation by address")
+    @Test
+    void getFirestationByAddress() {
+        // arrange
+        FireStation fireStation = new FireStation("123 sesame street", 2);
+        FireStation fireStation2 = new FireStation("456 something av.", 7);
+        fireStationService.addStation(fireStation);
+        fireStationService.addStation(fireStation2);
+        // act and assert
+        assertEquals(2, fireStationService.getStationNbByAddress("123 sesame street"));
     }
     // Update
     @DisplayName("Update firestation number")
