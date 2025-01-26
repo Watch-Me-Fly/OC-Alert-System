@@ -1,8 +1,8 @@
-package com.safetynet.alertsystem.controller;
+package com.safetynet.alertsystem.controller.core;
 
-import com.safetynet.alertsystem.model.MedicalRecord;
+import com.safetynet.alertsystem.model.core.MedicalRecord;
 import com.safetynet.alertsystem.repository.JsonReaderRepository;
-import com.safetynet.alertsystem.service.MedicalRecordService;
+import com.safetynet.alertsystem.service.core.MedicalRecordService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

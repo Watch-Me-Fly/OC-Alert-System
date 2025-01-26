@@ -1,7 +1,7 @@
-package com.safetynet.alertsystem.controllers;
+package com.safetynet.alertsystem.controllers.core;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.safetynet.alertsystem.model.Person;
+import com.safetynet.alertsystem.model.core.Person;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
