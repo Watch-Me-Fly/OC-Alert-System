@@ -1,17 +1,13 @@
 package com.safetynet.alertsystem.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.safetynet.alertsystem.controller.FireStationController;
 import com.safetynet.alertsystem.model.FireStation;
-import com.safetynet.alertsystem.repository.JsonReaderRepository;
-import com.safetynet.alertsystem.service.FireStationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;

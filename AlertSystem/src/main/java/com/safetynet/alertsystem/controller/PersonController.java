@@ -16,7 +16,7 @@ import java.util.List;
 @RequestMapping("/person")
 public class PersonController {
 
-    private JsonReaderRepository jsonReader;
+    private final JsonReaderRepository jsonReader;
     private final PersonService personService;
     private static final Logger logger = LogManager.getLogger(PersonController.class);
 
