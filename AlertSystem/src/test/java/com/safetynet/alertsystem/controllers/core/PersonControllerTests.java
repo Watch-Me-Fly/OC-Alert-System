@@ -49,10 +49,10 @@ public class PersonControllerTests {
                 .andExpect(MockMvcResultMatchers.content().string("Person added"));
     }
 
-    @DisplayName("/person/list Endpoint = 200 [OK]")
+    @DisplayName("/person/ Endpoint = 200 [OK]")
     @Test
     void testPersonListOK() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/person/list")).andExpect(MockMvcResultMatchers.status().isOk());
+        mockMvc.perform(MockMvcRequestBuilders.get("/person/")).andExpect(MockMvcResultMatchers.status().isOk());
     }
     @DisplayName("Add a person - OK")
     @Test

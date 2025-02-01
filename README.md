@@ -13,6 +13,7 @@
 6. [[Medical Records] : Créer le service et tests](https://github.com/Watch-Me-Fly/OC-Alert-System/commit/0a68dab69953bdcd214972be86814790bf2d41c4)
 
 ### Les points REST API
-7. [Création d'une service universel pour gérer les méthodes communes](https://github.com/Watch-Me-Fly/OC-Alert-System/commit/0e0a55e6e98ef2092d0e3f8e1708cdb0c9c59d2b)
+7. [Création d'un service universel pour gérer les méthodes communes](https://github.com/Watch-Me-Fly/OC-Alert-System/commit/0e0a55e6e98ef2092d0e3f8e1708cdb0c9c59d2b)
 8. [Definir les End-points dans des controlleurs](https://github.com/Watch-Me-Fly/OC-Alert-System/commit/7abbf311cc36c8765a664d0bd2921c9ccc632490)
 9. [Création des services d'alerte + interface alerte](https://github.com/Watch-Me-Fly/OC-Alert-System/commit/dcc336d1592e6b771f762821dcfd6e96c46c21ab)
+10. [Gestion des URLs restants](https://github.com/Watch-Me-Fly/OC-Alert-System/commit/d488289331cb16e12229685da08242152ab0e74c)
