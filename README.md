@@ -11,3 +11,6 @@
 5. [[FireStation] : Créer le service et tests](https://github.com/Watch-Me-Fly/OC-Alert-System/commit/ab6ef3d8bb8d5b7882014935a8545a3e394b15c5)
 * 5.a. : [[Fix] - correct FireStationController + FireStationControllerTest](https://github.com/Watch-Me-Fly/OC-Alert-System/commit/2b7d125405dc53b9b622d0d80b43c96db0c059a8)
 6. [[Medical Records] : Créer le service et tests](https://github.com/Watch-Me-Fly/OC-Alert-System/commit/0a68dab69953bdcd214972be86814790bf2d41c4)
+
+### Les points REST API
+7. [Création d'une service universel pour gérer les méthodes communes](https://github.com/Watch-Me-Fly/OC-Alert-System/commit/0e0a55e6e98ef2092d0e3f8e1708cdb0c9c59d2b)
