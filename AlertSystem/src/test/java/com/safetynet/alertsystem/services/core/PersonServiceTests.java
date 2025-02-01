@@ -1,7 +1,7 @@
-package com.safetynet.alertsystem.services;
+package com.safetynet.alertsystem.services.core;
 
-import com.safetynet.alertsystem.model.Person;
-import com.safetynet.alertsystem.service.PersonService;
+import com.safetynet.alertsystem.model.core.Person;
+import com.safetynet.alertsystem.service.core.PersonService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

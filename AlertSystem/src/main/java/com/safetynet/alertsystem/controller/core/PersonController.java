@@ -1,8 +1,8 @@
-package com.safetynet.alertsystem.controller;
+package com.safetynet.alertsystem.controller.core;
 
-import com.safetynet.alertsystem.model.Person;
+import com.safetynet.alertsystem.model.core.Person;
 import com.safetynet.alertsystem.repository.JsonReaderRepository;
-import com.safetynet.alertsystem.service.PersonService;
+import com.safetynet.alertsystem.service.core.PersonService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

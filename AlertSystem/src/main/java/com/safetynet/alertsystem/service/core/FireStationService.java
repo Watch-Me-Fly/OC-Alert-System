@@ -1,6 +1,6 @@
-package com.safetynet.alertsystem.service;
+package com.safetynet.alertsystem.service.core;
 
-import com.safetynet.alertsystem.model.FireStation;
+import com.safetynet.alertsystem.model.core.FireStation;
 import org.springframework.stereotype.Service;
 import java.util.Map;
 import java.util.HashMap;
