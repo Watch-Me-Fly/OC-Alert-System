@@ -26,7 +26,7 @@ public class FireStationController {
         this.jsonReader = jsonReader;
     }
 
-    @GetMapping("/list")
+    @GetMapping("/")
     public List<FireStation> getFireStationsList() {
         return jsonReader.getData().getFirestations();
     }
