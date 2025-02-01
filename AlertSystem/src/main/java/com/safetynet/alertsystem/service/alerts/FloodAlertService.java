@@ -22,6 +22,10 @@ public class FloodAlertService implements Alert {
 
     @Override
     public Map<String, Object> generateAlert(String stations) {
+        if (stations == null || stations.isEmpty()) {
+            logger.error("No stations provided");
+            return Collections.emptyMap();
+        }
         logger.debug("Entering generateAlert, stations: {}", stations);
 
         List<Integer> stationNumbers = parseStationNumbers(stations);

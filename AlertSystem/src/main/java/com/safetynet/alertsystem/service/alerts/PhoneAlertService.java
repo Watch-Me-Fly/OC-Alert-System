@@ -7,9 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +18,10 @@ public class PhoneAlertService implements Alert {
 
     @Override
     public List<String> generateAlert(String firestationNumber) {
+        if (firestationNumber == null) {
+            return Collections.emptyList();
+        }
+
         logger.debug("Entering generateAlert with stations {}", firestationNumber);
 
         List<FireStation> fireStations = jsonReader.getData().getFirestations();

@@ -20,6 +20,10 @@ public class ChildAlertService implements Alert {
 
     @Override
     public Map<String, Object> generateAlert(String address) {
+        if (address == null || address.isEmpty()) {
+            logger.error("Address is null or empty");
+            return Collections.emptyMap();
+        }
         logger.debug("entering generateAlert, address: {}", address);
 
         List<Person> persons = jsonReader.getData().getPersons();
