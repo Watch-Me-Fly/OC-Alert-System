@@ -64,7 +64,7 @@ class ChildAlertServiceTest {
         assertNotNull(result);
 
         List<Map<String, String>> children = (List<Map<String, String>>) result.get("children");
-        List<Person> householdMembers = (List<Person>) result.get("householdMembers");
+        List<Map<String, String>> householdMembers = (List<Map<String, String>>) result.get("householdMembers");
 
         assertEquals(1, children.size());
         assertEquals("John", children.get(0).get("firstName"));
@@ -72,8 +72,8 @@ class ChildAlertServiceTest {
         assertEquals("14", children.get(0).get("age"));
 
         assertEquals(1, householdMembers.size());
-        assertEquals("Jane", householdMembers.get(0).getFirstName());
-        assertEquals("Doe", householdMembers.get(0).getLastName());
+        assertEquals("Jane Doe", householdMembers.get(0).get("name"));
+        assertEquals("39", householdMembers.get(0).get("age"));
 
     }
 
