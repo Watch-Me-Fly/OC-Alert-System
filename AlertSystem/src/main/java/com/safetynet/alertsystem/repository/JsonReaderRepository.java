@@ -16,14 +16,12 @@ import java.util.logging.Logger;
 @Repository
 public class JsonReaderRepository {
 
-    private final ResourceLoader loader;
     private static final Logger LOGGER = Logger.getLogger(JsonReaderRepository.class.getName());
     @Getter private Data data;
 
     @Autowired
     public JsonReaderRepository(ResourceLoader loader, @Value("${test.json.path}") String jsonPath)
     {
-        this.loader = loader;
         this.data = new Data();
         ObjectMapper mapper = new ObjectMapper();
 

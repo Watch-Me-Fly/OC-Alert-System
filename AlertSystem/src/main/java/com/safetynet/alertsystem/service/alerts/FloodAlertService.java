@@ -6,6 +6,8 @@ import com.safetynet.alertsystem.model.core.Person;
 import com.safetynet.alertsystem.repository.JsonReaderRepository;
 import com.safetynet.alertsystem.service.UniversalService;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -14,52 +16,72 @@ import java.util.*;
 @RequiredArgsConstructor
 public class FloodAlertService implements Alert {
 
+    private static final Logger logger = LogManager.getLogger(FloodAlertService.class);
     private final JsonReaderRepository jsonReader;
     private UniversalService universalService = new UniversalService();
 
     @Override
     public Map<String, Object> generateAlert(String stations) {
+        if (stations == null || stations.isEmpty()) {
+            logger.error("No stations provided");
+            return Collections.emptyMap();
+        }
+        logger.debug("Entering generateAlert, stations: {}", stations);
 
-        List<Integer> stationNumbers = new ArrayList<>();
-        stationNumbers = parseStationNumbers(stations);
-        List<String> addressList = new ArrayList<>();
-        addressList = getAddressesforStations(stationNumbers);
+        List<Integer> stationNumbers = parseStationNumbers(stations);
+        logger.info("found {} stations", stationNumbers.size());
+
+        List<String> addressList = getAddressesforStations(stationNumbers);
+        logger.info("found {} addresses", addressList.size());
+
+        logger.debug("Exiting generateAlert");
         return generateResponse(addressList);
     }
     // Parses the list of stations passed in URL
     private List<Integer> parseStationNumbers(String stations) {
-        return Arrays.stream(stations.split(","))
+        logger.debug("Entering parseStationNumbers, stations: {}", stations);
+
+        List<Integer> result = Arrays.stream(stations.split(","))
                         .map(Integer::parseInt)
                         .toList();
+
+        logger.debug("Exiting parseStationNumbers");
+        return result;
     }
     // Gets a list of addresses for each station number
     private List<String> getAddressesforStations(List<Integer> stationNumbers) {
+        logger.debug("Entering getAddressesforStations, {} stations", stationNumbers.size());
 
         List<FireStation> fireStationList = jsonReader.getData().getFirestations();
+        logger.info("retrieved {} firestations", fireStationList.size());
 
-        return fireStationList.stream()
+        List<String> result = fireStationList.stream()
                 .filter(station -> stationNumbers.contains(station.getStation()))
                 .map(FireStation::getAddress)
                 .toList();
-    }
-    /**
-     * For each address, make a list of people and their medical records
-     * For each person, get personal details and medical records
-     */
-    private List<Map<String, Object>> getPeopleInAddress(String address, List<Person> people, List<MedicalRecord> medicalRecords) {
 
-        return people.stream()
+        logger.debug("Exiting getAddressesforStations");
+        return result;
+    }
+
+    // make a list of people and their medical records for each address
+    private List<Map<String, Object>> getPeopleInAddress(String address, List<Person> people, List<MedicalRecord> medicalRecords) {
+        logger.debug("Entering getPeopleInAddress, address: {}", address);
+
+        List<Map<String, Object>> results = people.stream()
                 .filter(person -> person.getAddress().equals(address))
                 .map(person -> universalService.getPersonalDetails(person, medicalRecords, true, false, false))
                 .toList();
+
+        logger.info("retrieved {} person", results.size());
+        logger.debug("Exiting getPeopleInAddress");
+        return results;
     }
-    /**
-     * Create a response as a map
-     * key : is address
-     * value : is a list of people, with their personal & medical info
-     */
+    // response is a map with addresses as key, and a list of people as value
     private Map<String, Object> generateResponse(List<String> addresses)
     {
+        logger.debug("Entering generateResponse, {} addresses", addresses.size());
+
         List<Person> people = jsonReader.getData().getPersons();
         List<MedicalRecord> records = jsonReader.getData().getMedicalrecords();
 
@@ -69,6 +91,9 @@ public class FloodAlertService implements Alert {
             List<Map<String, Object>> peopleInAddress = getPeopleInAddress(address, people, records);
             response.put(address, peopleInAddress);
         }
+
+        logger.info("retrieved {} people for {} addresses", people.size(), addresses.size());
+        logger.debug("Exiting generateResponse");
         return response;
     }
 

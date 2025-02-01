@@ -6,6 +6,8 @@ import com.safetynet.alertsystem.model.core.Person;
 import com.safetynet.alertsystem.repository.JsonReaderRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -14,6 +16,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class SafetyNetService {
 
+    private static final Logger logger = LogManager.getLogger(SafetyNetService.class);
     private final JsonReaderRepository jsonReader;
     private UniversalService universalService = new UniversalService();
 
@@ -23,13 +26,18 @@ public class SafetyNetService {
 
     @PostConstruct
     public void initializeLists() {
+        logger.info("Initializing lists");
         peopleList = jsonReader.getData().getPersons();
         stationList = jsonReader.getData().getFirestations();
         recordsList = jsonReader.getData().getMedicalrecords();
+        logger.info("Lists initialized : {} persons, {} fire stations, {} medical records",
+                peopleList.size(), stationList.size(), recordsList.size());
     }
 
     // get a list of people at the addresses of given station numbers
     public Map<String, Object> getPeopleAtStation(int stationNumber) {
+        logger.debug("entering getPeopleAtStation, stationNumber: {}", stationNumber);
+
         // initializations
         List<Map<String, Object>> personDetails = new ArrayList<>();
         int adultCount = 0;
@@ -41,12 +49,14 @@ public class SafetyNetService {
                 .filter(station -> station.getStation() == stationNumber)
                 .map(FireStation::getAddress)
                 .toList();
+        logger.info("Station {} has {} addresses", stationNumber, addresses.size());
 
         // step 2 : find all people at the address found
         List<Person> peopleCovered = peopleList
                 .stream()
                 .filter(person -> addresses.contains(person.getAddress()))
                 .toList();
+        logger.info("People covered = {} persons", peopleCovered.size());
 
         // step 3 : for each person, add data to list
         for (Person person : peopleCovered) {
@@ -69,6 +79,8 @@ public class SafetyNetService {
                 } else {
                     adultCount++;
                 }
+            } else {
+                logger.warn("No record found for person: {}", person.getFirstName() + " " + person.getLastName());
             }
         }
 
@@ -77,12 +89,20 @@ public class SafetyNetService {
         response.put("people", personDetails);
         response.put("adultCount", adultCount);
         response.put("childCount", childCount);
+        logger.info("Returning response : {} adults, {} children", adultCount, childCount);
 
+        logger.debug("Exiting getPeopleAtStation");
         return response;
     }
 
     // return a list of people living at an address, and the number of fire station at the same address
     public Map<String, Object> getFireInfo(String address) {
+        logger.debug("entering getFireInfo, address: {}", address);
+
+        if (address == null) {
+            logger.error("Address is null");
+            return null;
+        }
 
         Map<String, Object> response = new HashMap<>();
         List<Map<String, Object>> residentDetails = new ArrayList<>();
@@ -93,11 +113,13 @@ public class SafetyNetService {
                 .map(FireStation::getStation)
                 .toList();
         response.put("stationNumbersList", stationNumbersList);
+        logger.info("Returning response : {} stationNumbersList", stationNumbersList);
 
         List<Person> residentsList = peopleList
                 .stream()
                 .filter(person -> person.getAddress().equals(address))
                 .toList();
+        logger.info("Returning response : {} residents found at {}", residentsList.size(), address);
 
         for (Person resident : residentsList) {
             Map<String, Object> residentInfo = universalService
@@ -105,29 +127,52 @@ public class SafetyNetService {
             residentDetails.add(residentInfo);
         }
         response.put("residents", residentDetails);
+        logger.debug("Exiting getFireInfo");
 
         return response;
     }
 
     // return a list of people carrying the same name, and their information
     public List<Map<String, Object>> getPersonInfo(String lastName) {
+        logger.debug("entering getPersonInfo, lastName: {}", lastName);
+
+        if (lastName == null || lastName.isEmpty()) {
+            logger.error("No last name provided");
+            return Collections.emptyList();
+        }
 
         peopleList = jsonReader.getData().getPersons();
         recordsList = jsonReader.getData().getMedicalrecords();
 
-        return peopleList
+        List<Map<String, Object>> results = peopleList
                 .stream()
                 .filter(person -> person.getLastName().equals(lastName))
                 .map(person ->
                         universalService.getPersonalDetails(person, recordsList, false, true, true))
                 .toList();
+        logger.info("{} persons found carrying the last name {}", results.size(), lastName);
+
+        logger.debug("Exiting getPersonInfo");
+        return results;
     }
 
     // return all email addresses of residents of a given city
     public List<String> getCommunityEmails(String city) {
-        return peopleList.stream()
+        logger.debug("entering getCommunityEmails, city: {}", city);
+
+        if (city == null || city.isEmpty()) {
+            logger.error("No city provided");
+            return Collections.emptyList();
+        }
+
+        List<String> results = peopleList.stream()
                 .filter(person -> person.getCity().equals(city))
                 .map(person -> person.getEmail())
                 .toList();
+
+        logger.info("{} email found in {}", results.size(), city);
+
+        logger.debug("Exiting getCommunityEmails");
+        return results;
     }
 }
