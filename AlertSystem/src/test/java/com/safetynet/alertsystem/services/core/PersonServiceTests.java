@@ -113,4 +113,11 @@ public class PersonServiceTests {
         // assert
         assertTrue(result);
     }
+    @DisplayName("Delete a non existing person")
+    @Test
+    public void deleteNonExistingPerson() {
+        when(personService.deletePerson("John", "Doe")).thenReturn(false);
+        boolean result = personService.deletePerson("John", "Doe");
+        assertFalse(result);
+    }
 }
