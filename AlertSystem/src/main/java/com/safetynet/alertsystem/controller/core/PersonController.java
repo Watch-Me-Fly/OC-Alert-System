@@ -26,7 +26,7 @@ public class PersonController {
         this.jsonReader = jsonReader;
     }
 
-    @GetMapping("/list")
+    @GetMapping("/")
     public List<Person> getPersons() {
         return jsonReader.getData().getPersons();
     }

@@ -26,7 +26,7 @@ public class MedicalRecordsController {
         this.jsonReader = jsonReader;
     }
 
-    @GetMapping("/list")
+    @GetMapping("/")
     public List<MedicalRecord> getMedicalRecords() {
         return jsonReader.getData().getMedicalrecords();
     }

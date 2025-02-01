@@ -59,10 +59,10 @@ public class MedicalRecordsControllerTest {
                 .andExpect(MockMvcResultMatchers.content().string("Medical record added"));
     }
 
-    @DisplayName("/medicalRecord/list Engpoint = 200 [OK]")
+    @DisplayName("/medicalRecord/ Engpoint = 200 [OK]")
     @Test
     void testRecordsListOK() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/medicalRecord/list")).andExpect(MockMvcResultMatchers.status().isOk());
+        mockMvc.perform(MockMvcRequestBuilders.get("/medicalRecord/")).andExpect(MockMvcResultMatchers.status().isOk());
     }
     @DisplayName("Add a record - OK")
     @Test

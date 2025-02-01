@@ -37,10 +37,10 @@ public class FireStationControllerTest {
         station = new FireStation("123 sesame street", 4);
     }
 
-    @DisplayName("/firestation/list Endpoint = 200 [OK]")
+    @DisplayName("/firestation/ Endpoint = 200 [OK]")
     @Test
     void testStationsListOK() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/firestation/list")).andExpect(MockMvcResultMatchers.status().isOk());
+        mockMvc.perform(MockMvcRequestBuilders.get("/firestation/")).andExpect(MockMvcResultMatchers.status().isOk());
     }
     @DisplayName("Add a station - Ok")
     @Test
