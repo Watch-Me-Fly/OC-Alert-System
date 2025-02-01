@@ -17,3 +17,7 @@
 8. [Definir les End-points dans des controlleurs](https://github.com/Watch-Me-Fly/OC-Alert-System/commit/7abbf311cc36c8765a664d0bd2921c9ccc632490)
 9. [Création des services d'alerte + interface alerte](https://github.com/Watch-Me-Fly/OC-Alert-System/commit/dcc336d1592e6b771f762821dcfd6e96c46c21ab)
 10. [Gestion des URLs restants](https://github.com/Watch-Me-Fly/OC-Alert-System/commit/d488289331cb16e12229685da08242152ab0e74c)
+
+### Logging (Log4j2)
+11. [Setup log4j2](https://github.com/Watch-Me-Fly/OC-Alert-System/commit/c8368947c67b3a3309d674e3c4630b476d3987ef)
+12. [Add logs to services]()

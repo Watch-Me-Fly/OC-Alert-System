@@ -4,6 +4,8 @@ import com.safetynet.alertsystem.model.core.FireStation;
 import com.safetynet.alertsystem.model.core.Person;
 import com.safetynet.alertsystem.repository.JsonReaderRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,10 +15,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PhoneAlertService implements Alert {
 
+    private static final Logger logger = LogManager.getLogger(PhoneAlertService.class);
     private final JsonReaderRepository jsonReader;
 
     @Override
     public List<String> generateAlert(String firestationNumber) {
+        logger.debug("Entering generateAlert with stations {}", firestationNumber);
+
         List<FireStation> fireStations = jsonReader.getData().getFirestations();
         List<Person> people = jsonReader.getData().getPersons();
         List<String> phoneNumbers = new ArrayList<>();
@@ -30,7 +35,10 @@ public class PhoneAlertService implements Alert {
                     .toList();
 
             if (stations.isEmpty()) {
+                logger.warn("No firestation found");
                 return phoneNumbers;
+            } else {
+                logger.info("Found {} stations", stations.size());
             }
 
             // add all phone numbers for each fire station
@@ -39,11 +47,14 @@ public class PhoneAlertService implements Alert {
                         .filter(person -> person.getAddress().equalsIgnoreCase(fireStation.getAddress()))
                         .forEach(person -> phoneNumbers.add(person.getPhone()));
             }
+            logger.info("found {} phone numbers", phoneNumbers.size());
 
         } catch (NumberFormatException e) {
+            logger.error("Invalid phone number format", e);
             return phoneNumbers;
         }
 
+        logger.debug("Exiting generateAlert");
         return phoneNumbers.isEmpty() ? new ArrayList<>() :  phoneNumbers;
     }
 
