@@ -7,10 +7,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class UniversalService {
@@ -33,9 +30,19 @@ public class UniversalService {
     // get a map of personal details and medical records
     public Map<String, Object> getPersonalDetails(Person person, List<MedicalRecord> medicalRecords, boolean phone, boolean email, boolean address) {
 
-        Map<String, Object> personDetails = new HashMap<>();
+        Map<String, Object> personDetails = new LinkedHashMap<>();
         personDetails.put("firstName", person.getFirstName());
         personDetails.put("lastName", person.getLastName());
+
+        if (phone) {
+            personDetails.put("phone", person.getPhone());
+        }
+        if (email) {
+            personDetails.put("email", person.getEmail());
+        }
+        if (address) {
+            personDetails.put("address", person.getAddress());
+        }
 
         if (medicalRecords != null) {
             List<MedicalRecord> medicalRecordList = getMedicalRecord(person, medicalRecords);
@@ -49,19 +56,9 @@ public class UniversalService {
             List<String> allergies = medicalRecordList.isEmpty() ?
                     Collections.emptyList() : medicalRecordList.get(0).getAllergies();
 
+            personDetails.put("age", age);
             personDetails.put("medications", medications);
             personDetails.put("allergies", allergies);
-            personDetails.put("age", age);
-        }
-
-        if (phone) {
-            personDetails.put("phone", person.getPhone());
-        }
-        if (email) {
-            personDetails.put("email", person.getEmail());
-        }
-        if (address) {
-            personDetails.put("address", person.getAddress());
         }
 
         return personDetails;

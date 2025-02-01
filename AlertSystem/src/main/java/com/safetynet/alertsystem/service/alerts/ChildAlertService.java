@@ -1,6 +1,5 @@
 package com.safetynet.alertsystem.service.alerts;
 
-
 import com.safetynet.alertsystem.model.core.MedicalRecord;
 import com.safetynet.alertsystem.model.core.Person;
 import com.safetynet.alertsystem.repository.JsonReaderRepository;
@@ -33,7 +32,7 @@ public class ChildAlertService implements Alert {
 
         // prepare lists
         List<Map<String, String>> children = new ArrayList<>();
-        List<Person> otherMembers = new ArrayList<>();
+        List<Map<String, String>> otherMembers = new ArrayList<>();
 
         // put residents into either : children or other members list
         for (Person person : residents) {
@@ -68,7 +67,7 @@ public class ChildAlertService implements Alert {
     private void sortIntoGroups(MedicalRecord record,
                                   Person person,
                                   List<Map<String, String>> children,
-                                  List<Person> otherMembers)
+                                  List<Map<String, String>> otherMembers)
     {
         int age = universalService.getAgeFromBirthdate(record.getBirthdate());
         if (age <= 18) {
@@ -78,7 +77,10 @@ public class ChildAlertService implements Alert {
             child.put("age", String.valueOf(age));
             children.add(child);
         } else {
-            otherMembers.add(person);
+            Map<String, String> member = new HashMap();
+            member.put("name", person.getFirstName() + " " + person.getLastName());
+            member.put("age", String.valueOf(age));
+            otherMembers.add(member);
         }
     }
 
