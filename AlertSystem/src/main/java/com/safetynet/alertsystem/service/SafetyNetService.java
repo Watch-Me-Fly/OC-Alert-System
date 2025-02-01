@@ -37,6 +37,7 @@ public class SafetyNetService {
     // get a list of people at the addresses of given station numbers
     public Map<String, Object> getPeopleAtStation(int stationNumber) {
         logger.debug("entering getPeopleAtStation, stationNumber: {}", stationNumber);
+
         // initializations
         List<Map<String, Object>> personDetails = new ArrayList<>();
         int adultCount = 0;
@@ -98,6 +99,11 @@ public class SafetyNetService {
     public Map<String, Object> getFireInfo(String address) {
         logger.debug("entering getFireInfo, address: {}", address);
 
+        if (address == null) {
+            logger.error("Address is null");
+            return null;
+        }
+
         Map<String, Object> response = new HashMap<>();
         List<Map<String, Object>> residentDetails = new ArrayList<>();
 
@@ -130,6 +136,11 @@ public class SafetyNetService {
     public List<Map<String, Object>> getPersonInfo(String lastName) {
         logger.debug("entering getPersonInfo, lastName: {}", lastName);
 
+        if (lastName == null || lastName.isEmpty()) {
+            logger.error("No last name provided");
+            return Collections.emptyList();
+        }
+
         peopleList = jsonReader.getData().getPersons();
         recordsList = jsonReader.getData().getMedicalrecords();
 
@@ -148,6 +159,11 @@ public class SafetyNetService {
     // return all email addresses of residents of a given city
     public List<String> getCommunityEmails(String city) {
         logger.debug("entering getCommunityEmails, city: {}", city);
+
+        if (city == null || city.isEmpty()) {
+            logger.error("No city provided");
+            return Collections.emptyList();
+        }
 
         List<String> results = peopleList.stream()
                 .filter(person -> person.getCity().equals(city))

@@ -20,4 +20,5 @@
 
 ### Logging (Log4j2)
 11. [Setup log4j2](https://github.com/Watch-Me-Fly/OC-Alert-System/commit/c8368947c67b3a3309d674e3c4630b476d3987ef)
-12. [Add logs to services]()
+12. [Add logs to services](https://github.com/Watch-Me-Fly/OC-Alert-System/commit/7d0cd744ef37980fed769395064e8861edab80b5)
+13. []()
