@@ -28,30 +28,53 @@ public class MedicalRecordsController {
 
     @GetMapping("/")
     public List<MedicalRecord> getMedicalRecords() {
-        return jsonReader.getData().getMedicalrecords();
+        logger.debug("Entering getMedicalRecords");
+
+        List<MedicalRecord> medicalRecords = jsonReader.getData().getMedicalrecords();
+
+        logger.info("found {} medical records", medicalRecords.size());
+        logger.debug("Exiting getMedicalRecords");
+
+        return medicalRecords;
     }
 
     @PostMapping
     public ResponseEntity<String> addRecord(@RequestBody MedicalRecord medicalRecord) {
+        logger.debug("Entering addRecord");
+
         medicalRecordService.addMedicalRecord(medicalRecord);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Medical record added");
+        ResponseEntity<String> response = ResponseEntity.status(HttpStatus.CREATED).body("Medical record added");
+
+        logger.info("Medical record added");
+        logger.debug("Exiting addRecord");
+        return response;
     }
 
     @PutMapping
     public ResponseEntity<String> updateRecord(@RequestBody MedicalRecord medicalRecord) {
+        logger.debug("Entering updateRecord");
+
         if (medicalRecordService.checkIfRecordExists(medicalRecord.getFirstName(), medicalRecord.getLastName())) {
+
             medicalRecordService.updateMedicalRecord(medicalRecord);
+            logger.info("Medical record updated");
             return ResponseEntity.status(HttpStatus.OK).body("Medical record updated");
+
         }
+        logger.error("Medical record does not exist");
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Medical record not found");
     }
 
     @DeleteMapping("/{firstName}/{lastName}")
     public ResponseEntity<String> deleteRecord(@PathVariable String firstName, @PathVariable String lastName) {
+        logger.debug("Entering deleteRecord");
         if (medicalRecordService.checkIfRecordExists(firstName, lastName)) {
+
             medicalRecordService.deleteMedicalRecord(firstName, lastName);
+            logger.info("Medical record deleted");
             return ResponseEntity.status(HttpStatus.OK).body("Medical record deleted");
         }
+        logger.error("Medical record does not exist");
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Medical record not found");
     }
 }
