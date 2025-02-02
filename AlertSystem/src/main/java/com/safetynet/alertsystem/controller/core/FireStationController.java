@@ -28,32 +28,63 @@ public class FireStationController {
 
     @GetMapping("/")
     public List<FireStation> getFireStationsList() {
-        return jsonReader.getData().getFirestations();
+        logger.debug("Entering getFireStationsList");
+
+        List<FireStation> stationList = jsonReader.getData().getFirestations();
+
+        logger.info("stations retrieved: {} ", stationList.size());
+        logger.debug("Exiting getFireStationsList");
+
+        return stationList;
     }
 
     @PostMapping
     public ResponseEntity<String> addFireStation(@RequestBody FireStation fireStation) {
+        logger.debug("Entering addFireStation");
+
         fireStationService.addStation(fireStation);
-        return ResponseEntity.status(HttpStatus.CREATED).body("FireStation created");
+        ResponseEntity<String> response = ResponseEntity.status(HttpStatus.CREATED).body("FireStation created");
+
+        logger.info("FireStation added: {} ", fireStation);
+        logger.debug("Exiting addFireStation");
+
+        return response;
     }
 
     @PutMapping
     public ResponseEntity<String> updateFireStation(@RequestBody FireStation fireStation) {
+        logger.debug("Entering updateFireStation");
+
         if (fireStationService.checkIfAddressExists(fireStation.getAddress())) {
+
             fireStationService.updateStationNumber(fireStation);
+            logger.info("Station {} updated", fireStation.getAddress());
+
             return ResponseEntity.status(HttpStatus.OK).body("FireStation updated");
+
         } else {
+
+            logger.error("Station {} cannot be updated", fireStation.getAddress());
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("FireStation not found for the given address");
+
         }
     }
 
     @DeleteMapping("/{address}")
     public ResponseEntity<String> deleteFireStation(@PathVariable String address) {
+        logger.debug("Entering deleteFireStation");
+
         if (fireStationService.checkIfAddressExists(address)) {
+
             fireStationService.deleteStation(address);
+            logger.info("Station {} deleted", address);
+
             return ResponseEntity.status(HttpStatus.OK).body("FireStation deleted");
+
         } else {
+
+            logger.error("Station {} cannot be deleted", address);
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("No firestation is found for the given address");
         }
