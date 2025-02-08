@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -27,8 +26,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 public class MedicalRecordsControllerTest {
 
     @Mock
-    private MedicalRecordService service;
-    @Mock
     private MedicalRecord record;
     @Autowired
     private MockMvc mockMvc;
@@ -38,7 +35,6 @@ public class MedicalRecordsControllerTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        MedicalRecordsController controller = new MedicalRecordsController(service);
         objectMapper = new ObjectMapper();
         record = new MedicalRecord("John",
                 "Doe",
