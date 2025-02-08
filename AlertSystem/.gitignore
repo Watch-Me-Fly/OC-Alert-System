@@ -39,3 +39,6 @@ build/
 
 ### logs ###
 logs/app.log
+
+### modified json (to keep original untouched) ###
+!**/data.json
