@@ -1,8 +1,10 @@
 package com.safetynet.alertsystem.service.core;
 
 import com.safetynet.alertsystem.model.core.Person;
+import com.safetynet.alertsystem.repository.JsonReaderRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -13,9 +15,33 @@ public class PersonService {
 
     private static final Logger logger = LogManager.getLogger(PersonService.class);
     private final List<Person> people = new ArrayList<>();
+    private final JsonReaderRepository jsonReader;
 
+    // data management
+    @Autowired
+    public PersonService(JsonReaderRepository jsonReader) {
+        this.jsonReader = jsonReader;
+        loadData();
+    }
+    private void loadData() {
+        logger.debug("Entering loadData method");
+
+        List<Person> personList = jsonReader.getData().getPersons();
+        people.addAll(personList);
+
+        logger.info("loaded {} people", people.size());
+        logger.debug("Exiting loadData method");
+    }
+    private void saveData() {
+        logger.debug("Entering saveData");
+        jsonReader.getData().setPersons(people);
+        jsonReader.writeData();
+        logger.debug("Exiting saveData");
+    }
+    // general
     public boolean checkIfPersonExists(String firstName, String lastName) {
         logger.debug("Checking if {} exists", firstName + " " + lastName);
+
         for (Person person : people) {
             if (person.getFirstName().equals(firstName)
                     && person.getLastName().equals(lastName)) {
@@ -31,12 +57,21 @@ public class PersonService {
         logger.debug("Entering addPerson, name : {}", person.getFirstName() + " " + person.getLastName());
 
         people.add(person);
+        saveData();
 
         logger.info("Person added");
         logger.debug("Exiting addPerson");
         return person;
     }
     // read
+    public List<Person> getAllPeople() {
+        logger.debug("Entering getAllPeople");
+
+        List<Person> results = new ArrayList<>(people);
+
+        logger.debug("Exiting getAllPeople");
+        return results;
+    }
     public List<Person> getAllPeopleByName(String firstName, String lastName)
     {
         logger.debug("entering getAllPeopleByName, name : {}", firstName + " " + lastName);
@@ -69,6 +104,8 @@ public class PersonService {
                 return person;
             }
         }
+        saveData();
+
         logger.info("Person cannot be updated because does not exist");
         logger.debug("Exiting updatePerson");
         return null;
@@ -84,6 +121,7 @@ public class PersonService {
         );
 
         if (result) {
+            saveData();
             logger.info("Person deleted");
         } else {
             logger.info("Person cannot be deleted because does not exist");

@@ -4,6 +4,8 @@ import com.safetynet.alertsystem.model.core.MedicalRecord;
 import com.safetynet.alertsystem.model.core.Person;
 import com.safetynet.alertsystem.repository.JsonReaderRepository;
 import com.safetynet.alertsystem.service.UniversalService;
+import com.safetynet.alertsystem.service.core.MedicalRecordService;
+import com.safetynet.alertsystem.service.core.PersonService;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,8 +28,8 @@ public class ChildAlertService implements Alert {
         }
         logger.debug("entering generateAlert, address: {}", address);
 
-        List<Person> persons = jsonReader.getData().getPersons();
-        List<MedicalRecord> medicalRecords = jsonReader.getData().getMedicalrecords();
+        List<Person> persons = new PersonService(jsonReader).getAllPeople();
+        List<MedicalRecord> medicalRecords = new MedicalRecordService(jsonReader).getAllMedicalRecords();
         logger.info("{} persons found, and {} medical records", persons.size(), medicalRecords.size());
 
         // get all people living at the given address

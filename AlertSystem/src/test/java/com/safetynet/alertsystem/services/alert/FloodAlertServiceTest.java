@@ -36,8 +36,6 @@ public class FloodAlertServiceTest {
     private FloodAlertService service;
     @Mock
     private JsonReaderRepository jsonReader;
-    @Autowired
-    private MockMvc mockMvc;
 
     private List<FireStation> stationsList;
     private List<Person> peopleList;

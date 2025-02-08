@@ -3,6 +3,8 @@ package com.safetynet.alertsystem.service.alerts;
 import com.safetynet.alertsystem.model.core.FireStation;
 import com.safetynet.alertsystem.model.core.Person;
 import com.safetynet.alertsystem.repository.JsonReaderRepository;
+import com.safetynet.alertsystem.service.core.FireStationService;
+import com.safetynet.alertsystem.service.core.PersonService;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,8 +26,8 @@ public class PhoneAlertService implements Alert {
 
         logger.debug("Entering generateAlert with stations {}", firestationNumber);
 
-        List<FireStation> fireStations = jsonReader.getData().getFirestations();
-        List<Person> people = jsonReader.getData().getPersons();
+        List<FireStation> fireStations = new FireStationService(jsonReader).getAllStations();
+        List<Person> people = new PersonService(jsonReader).getAllPeople();
         Set<String> phoneNumbers = new HashSet<>();
 
         try {

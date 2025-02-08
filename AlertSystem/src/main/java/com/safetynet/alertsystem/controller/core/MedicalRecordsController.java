@@ -1,7 +1,6 @@
 package com.safetynet.alertsystem.controller.core;
 
 import com.safetynet.alertsystem.model.core.MedicalRecord;
-import com.safetynet.alertsystem.repository.JsonReaderRepository;
 import com.safetynet.alertsystem.service.core.MedicalRecordService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,26 +15,33 @@ import java.util.List;
 @RequestMapping("/medicalRecord")
 public class MedicalRecordsController {
 
-    private JsonReaderRepository jsonReader;
     private final MedicalRecordService medicalRecordService;
     private static final Logger logger = LogManager.getLogger(MedicalRecordsController.class);
 
     @Autowired
-    public MedicalRecordsController(MedicalRecordService medicalRecordService, JsonReaderRepository jsonReader) {
+    public MedicalRecordsController(MedicalRecordService medicalRecordService) {
         this.medicalRecordService = medicalRecordService;
-        this.jsonReader = jsonReader;
     }
 
     @GetMapping("/")
     public List<MedicalRecord> getMedicalRecords() {
         logger.debug("Entering getMedicalRecords");
 
-        List<MedicalRecord> medicalRecords = jsonReader.getData().getMedicalrecords();
+        List<MedicalRecord> medicalRecords = medicalRecordService.getAllMedicalRecords();
 
         logger.info("found {} medical records", medicalRecords.size());
         logger.debug("Exiting getMedicalRecords");
-
         return medicalRecords;
+    }
+
+    @GetMapping("/{firstName}/{lastName}")
+    public MedicalRecord getMedicalRecordPerson(@PathVariable String firstName, @PathVariable String lastName) {
+        logger.debug("Entering getMedicalRecordPerson");
+
+        MedicalRecord record = medicalRecordService.getMedicalRecordByName(firstName, lastName);
+
+        logger.debug("Exiting getMedicalRecordPerson");
+        return record;
     }
 
     @PostMapping
