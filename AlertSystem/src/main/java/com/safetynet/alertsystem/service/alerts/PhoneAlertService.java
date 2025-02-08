@@ -17,16 +17,16 @@ public class PhoneAlertService implements Alert {
     private final JsonReaderRepository jsonReader;
 
     @Override
-    public List<String> generateAlert(String firestationNumber) {
+     public Set<String> generateAlert(String firestationNumber) {
         if (firestationNumber == null) {
-            return Collections.emptyList();
+            return Collections.emptySet();
         }
 
         logger.debug("Entering generateAlert with stations {}", firestationNumber);
 
         List<FireStation> fireStations = jsonReader.getData().getFirestations();
         List<Person> people = jsonReader.getData().getPersons();
-        List<String> phoneNumbers = new ArrayList<>();
+        Set<String> phoneNumbers = new HashSet<>();
 
         try {
             int stationNb = Integer.parseInt(firestationNumber);
@@ -57,7 +57,7 @@ public class PhoneAlertService implements Alert {
         }
 
         logger.debug("Exiting generateAlert");
-        return phoneNumbers.isEmpty() ? new ArrayList<>() :  phoneNumbers;
+        return phoneNumbers.isEmpty() ? new HashSet<>() :  phoneNumbers;
     }
 
 }
