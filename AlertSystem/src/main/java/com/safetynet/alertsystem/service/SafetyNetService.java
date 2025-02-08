@@ -4,6 +4,9 @@ import com.safetynet.alertsystem.model.core.FireStation;
 import com.safetynet.alertsystem.model.core.MedicalRecord;
 import com.safetynet.alertsystem.model.core.Person;
 import com.safetynet.alertsystem.repository.JsonReaderRepository;
+import com.safetynet.alertsystem.service.core.FireStationService;
+import com.safetynet.alertsystem.service.core.MedicalRecordService;
+import com.safetynet.alertsystem.service.core.PersonService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
@@ -20,16 +23,16 @@ public class SafetyNetService {
     private final JsonReaderRepository jsonReader;
     private UniversalService universalService = new UniversalService();
 
-    List<Person> peopleList;
+    List<Person> peopleList ;
     List<FireStation> stationList;
     List<MedicalRecord> recordsList;
 
     @PostConstruct
     public void initializeLists() {
         logger.info("Initializing lists");
-        peopleList = jsonReader.getData().getPersons();
-        stationList = jsonReader.getData().getFirestations();
-        recordsList = jsonReader.getData().getMedicalrecords();
+        peopleList = new PersonService(jsonReader).getAllPeople();
+        stationList = new FireStationService(jsonReader).getAllStations();
+        recordsList = new MedicalRecordService(jsonReader).getAllMedicalRecords();
         logger.info("Lists initialized : {} persons, {} fire stations, {} medical records",
                 peopleList.size(), stationList.size(), recordsList.size());
     }

@@ -5,6 +5,8 @@ import com.safetynet.alertsystem.model.core.MedicalRecord;
 import com.safetynet.alertsystem.model.core.Person;
 import com.safetynet.alertsystem.repository.JsonReaderRepository;
 import com.safetynet.alertsystem.service.UniversalService;
+import com.safetynet.alertsystem.service.core.MedicalRecordService;
+import com.safetynet.alertsystem.service.core.PersonService;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -82,8 +84,8 @@ public class FloodAlertService implements Alert {
     {
         logger.debug("Entering generateResponse, {} addresses", addresses.size());
 
-        List<Person> people = jsonReader.getData().getPersons();
-        List<MedicalRecord> records = jsonReader.getData().getMedicalrecords();
+        List<Person> people = new PersonService(jsonReader).getAllPeople();
+        List<MedicalRecord> records = new MedicalRecordService(jsonReader).getAllMedicalRecords();
 
         Map<String, Object> response = new HashMap<>();
 
