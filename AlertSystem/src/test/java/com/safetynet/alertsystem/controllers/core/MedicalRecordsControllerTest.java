@@ -42,7 +42,7 @@ public class MedicalRecordsControllerTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        controller = new MedicalRecordsController(service, jsonReader);
+        controller = new MedicalRecordsController(service);
         objectMapper = new ObjectMapper();
         record = new MedicalRecord("John",
                 "Doe",
