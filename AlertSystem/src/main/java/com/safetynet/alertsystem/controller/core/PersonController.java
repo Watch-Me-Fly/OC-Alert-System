@@ -1,7 +1,6 @@
 package com.safetynet.alertsystem.controller.core;
 
 import com.safetynet.alertsystem.model.core.Person;
-import com.safetynet.alertsystem.repository.JsonReaderRepository;
 import com.safetynet.alertsystem.service.core.PersonService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,23 +15,31 @@ import java.util.List;
 @RequestMapping("/person")
 public class PersonController {
 
-    private final JsonReaderRepository jsonReader;
     private final PersonService personService;
     private static final Logger logger = LogManager.getLogger(PersonController.class);
 
     @Autowired
-    public PersonController(PersonService personService, JsonReaderRepository jsonReader) {
+    public PersonController(PersonService personService) {
         this.personService = personService;
-        this.jsonReader = jsonReader;
     }
 
     @GetMapping("/")
     public List<Person> getPersons() {
         logger.debug("Entering getPersons");
 
-        List<Person> peopleList = jsonReader.getData().getPersons();
+        List<Person> peopleList = personService.getAllPeople();
 
         logger.debug("Exiting getPersons");
+        return peopleList;
+    }
+
+    @GetMapping("/{firstName}/{lastName}")
+    public List<Person> getPeopleByName(@PathVariable String firstName, @PathVariable String lastName) {
+        logger.debug("Entering getPeopleByName");
+
+        List<Person> peopleList = personService.getAllPeopleByName(firstName, lastName);
+
+        logger.debug("Exiting getPeopleByName");
         return peopleList;
     }
 
