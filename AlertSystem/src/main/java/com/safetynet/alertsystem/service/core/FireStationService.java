@@ -1,24 +1,54 @@
 package com.safetynet.alertsystem.service.core;
 
 import com.safetynet.alertsystem.model.core.FireStation;
+import com.safetynet.alertsystem.repository.JsonReaderRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.Map;
-import java.util.HashMap;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class FireStationService {
 
     private static final Logger logger = LogManager.getLogger(FireStationService.class);
     private final Map<String, Integer> firestationMap = new HashMap<>();
+    private final JsonReaderRepository jsonReader;
 
+    // data management
+    @Autowired
+    public FireStationService(JsonReaderRepository jsonReader) {
+        this.jsonReader = jsonReader;
+        loadData();
+    }
+    private void loadData() {
+        logger.debug("Entering loadData method");
+
+        List<FireStation> stations = jsonReader.getData().getFirestations();
+        for (FireStation fireStation : stations) {
+            firestationMap.put(fireStation.getAddress(), fireStation.getStation());
+        }
+        logger.info("Loaded {} firestations", stations.size());
+        logger.debug("Exiting loadData method");
+    }
+    private void saveData() {
+        List<FireStation> stations = firestationMap.entrySet()
+                .stream()
+                .map(entry -> new FireStation(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
+        jsonReader.getData().setFirestations(stations);
+        jsonReader.writeData();
+        logger.info("Saved firestation");
+    }
     // create
     public void addStation(FireStation fireStation) {
         logger.debug("Entering addStation, fireStation: {}", fireStation);
 
         String address = fireStation.getAddress().toLowerCase();
         firestationMap.put(address, fireStation.getStation());
+        saveData();
 
         logger.info("added fireStation: {}", fireStation);
         logger.debug("Exiting addStation");
@@ -39,6 +69,15 @@ public class FireStationService {
 
         return firestationMap;
     }
+    public FireStation getStationByAddress(String address) {
+        logger.debug("Entering getStationByAddress, address: {}", address);
+
+        FireStation fireStation = new FireStation(address, firestationMap.get(address));
+
+        logger.info("station {}", address);
+        logger.debug("Exiting getStationByAddress");
+        return fireStation;
+    }
     public boolean checkIfAddressExists(String address) {
         logger.debug("Entering checkIfAddressExists, address: {}", address);
 
@@ -54,6 +93,7 @@ public class FireStationService {
 
         if (firestationMap.containsKey(fireStation.getAddress())) {
             firestationMap.put(fireStation.getAddress(), fireStation.getStation());
+            saveData();
             logger.info("updated station number: {}", fireStation);
         } else {
             logger.warn("station number not found");
@@ -66,6 +106,7 @@ public class FireStationService {
         logger.debug("Entering deleteStation, address: {}", address);
 
         firestationMap.remove(address);
+        saveData();
 
         logger.info("deleted station number: {}", address);
         logger.debug("Exiting deleteStation");
