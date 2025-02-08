@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class FireStationService {
 
     private static final Logger logger = LogManager.getLogger(FireStationService.class);
-    private final Map<String, Integer> firestationMap = new HashMap<>();
+    private final Map<String, Set<Integer>> firestationMap = new HashMap<>();
     private final JsonReaderRepository jsonReader;
 
     // data management
@@ -27,8 +27,11 @@ public class FireStationService {
         logger.debug("Entering loadData method");
 
         List<FireStation> stations = jsonReader.getData().getFirestations();
+        firestationMap.clear();
         for (FireStation fireStation : stations) {
-            firestationMap.put(fireStation.getAddress(), fireStation.getStation());
+            firestationMap
+                    .computeIfAbsent(fireStation.getAddress(), k -> new HashSet<>())
+                    .add(fireStation.getStation());
         }
         logger.info("Loaded {} firestations", stations.size());
         logger.debug("Exiting loadData method");
@@ -36,63 +39,97 @@ public class FireStationService {
     private void saveData() {
         List<FireStation> stations = firestationMap.entrySet()
                 .stream()
-                .map(entry -> new FireStation(entry.getKey(), entry.getValue()))
-                .collect(Collectors.toList());
+                .flatMap(entry -> entry.getValue().stream().map(station -> new FireStation(entry.getKey(), station)))
+                .toList();
         jsonReader.getData().setFirestations(stations);
         jsonReader.writeData();
         logger.info("Saved firestation");
+    }
+    // General
+    public boolean checkIfAddressExists(String address) {
+        logger.debug("Entering checkIfAddressExists, address: {}", address);
+
+        boolean exists = firestationMap.containsKey(address);
+
+        logger.info("adress exists ? {}", exists);
+        logger.debug("Exiting checkIfAddressExists");
+        return exists;
     }
     // create
     public void addStation(FireStation fireStation) {
         logger.debug("Entering addStation, fireStation: {}", fireStation);
 
-        String address = fireStation.getAddress().toLowerCase();
-        firestationMap.put(address, fireStation.getStation());
+        loadData();
+        String address = fireStation.getAddress();
+        firestationMap.putIfAbsent(address, new HashSet<>());
+        firestationMap.get(address).add(fireStation.getStation());
         saveData();
 
         logger.info("added fireStation: {}", fireStation);
         logger.debug("Exiting addStation");
     }
     // read
+    public List<FireStation> getAllStations() {
+        logger.debug("Entering getAllStations");
+
+        List<FireStation> stations = firestationMap.entrySet()
+                .stream()
+                .flatMap(entry -> entry.getValue().stream()
+                        .map(station -> new FireStation(entry.getKey(), station)))
+                .toList();
+
+        logger.info("Stations found: {}", stations.size());
+        logger.debug("Exiting getAllStations");
+        return stations;
+    }
     public int getStationNbByAddress(String address) {
         logger.debug("Entering getStationNbByAddress, address: {}", address);
 
-        int nb = firestationMap.get(address);
-
-        logger.info("station number at {} = {}", nb, address);
-        logger.debug("Exiting getStationNbByAddress");
-        return nb;
+        Set<Integer> stationNumbers = firestationMap.get(address);
+        // Returning only first station
+        if (stationNumbers != null && !stationNumbers.isEmpty()) {
+            logger.info("Station numbers for {}: {}", address, stationNumbers);
+            return stationNumbers.iterator().next();
+        }else {
+            logger.warn("No station found for address: {}", address);
+            return -1;
+        }
     }
     public Map<String, Integer> getStationsMap() {
         logger.debug("Entering getStationsMap");
-        logger.info("station map size: {}", firestationMap.size());
 
-        return firestationMap;
+        // Returns only the first station per address
+        Map<String, Integer> oneStationMap = new HashMap<>();
+        for (Map.Entry<String, Set<Integer>> entry : firestationMap.entrySet()) {
+            oneStationMap.put(
+                    entry.getKey(),
+                    entry.getValue().iterator().next()
+            );
+        }
+        logger.info("station map size: {}", oneStationMap.size());
+        return oneStationMap;
     }
     public FireStation getStationByAddress(String address) {
         logger.debug("Entering getStationByAddress, address: {}", address);
 
-        FireStation fireStation = new FireStation(address, firestationMap.get(address));
+        Set<Integer> stations = firestationMap.get(address);
+        // if there's at least 1 station, get it
+        if (stations != null && !stations.isEmpty()) {
+            return new FireStation(address, stations.iterator().next());
+        }
 
-        logger.info("station {}", address);
         logger.debug("Exiting getStationByAddress");
-        return fireStation;
-    }
-    public boolean checkIfAddressExists(String address) {
-        logger.debug("Entering checkIfAddressExists, address: {}", address);
-
-        boolean exists = firestationMap.containsKey(address.toLowerCase());
-
-        logger.info("adress exists ? {}", exists);
-        logger.debug("Exiting checkIfAddressExists");
-        return exists;
+        return null;
     }
     // update
     public void updateStationNumber(FireStation fireStation) {
         logger.debug("Entering updateStationNumber, fireStation: {}", fireStation);
 
-        if (firestationMap.containsKey(fireStation.getAddress())) {
-            firestationMap.put(fireStation.getAddress(), fireStation.getStation());
+        String key = fireStation.getAddress();
+        Set<Integer> stations = firestationMap.get(key);
+        if (stations != null) {
+            stations.remove(fireStation.getStation());
+            stations.add(fireStation.getStation());
             saveData();
             logger.info("updated station number: {}", fireStation);
         } else {

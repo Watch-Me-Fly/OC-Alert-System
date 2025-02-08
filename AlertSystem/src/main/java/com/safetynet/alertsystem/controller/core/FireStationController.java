@@ -1,7 +1,6 @@
 package com.safetynet.alertsystem.controller.core;
 
 import com.safetynet.alertsystem.model.core.FireStation;
-import com.safetynet.alertsystem.repository.JsonReaderRepository;
 import com.safetynet.alertsystem.service.core.FireStationService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,26 +15,36 @@ import java.util.List;
 @RequestMapping("/firestation")
 public class FireStationController {
 
-    private final JsonReaderRepository jsonReader;
     private final FireStationService fireStationService;
     private static final Logger logger = LogManager.getLogger(FireStationController.class);
 
     @Autowired
-    public FireStationController(FireStationService fireStationService, JsonReaderRepository jsonReader) {
+    public FireStationController(FireStationService fireStationService) {
         this.fireStationService = fireStationService;
-        this.jsonReader = jsonReader;
     }
 
     @GetMapping("/")
     public List<FireStation> getFireStationsList() {
         logger.debug("Entering getFireStationsList");
 
-        List<FireStation> stationList = jsonReader.getData().getFirestations();
+        List<FireStation> stationList = fireStationService.getAllStations();
 
         logger.info("stations retrieved: {} ", stationList.size());
         logger.debug("Exiting getFireStationsList");
 
         return stationList;
+    }
+
+    @GetMapping("/{address}")
+    public FireStation getFireStationByAddress(@PathVariable String address) {
+        logger.debug("Entering getFireStationByAddress");
+
+        FireStation station = fireStationService.getStationByAddress(address);
+
+        logger.info("station retrieved: {} ", station);
+        logger.debug("Exiting getFireStationByAddress");
+
+        return station;
     }
 
     @PostMapping
