@@ -3,7 +3,6 @@ package com.safetynet.alertsystem.controllers.core;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.safetynet.alertsystem.controller.core.MedicalRecordsController;
 import com.safetynet.alertsystem.model.core.MedicalRecord;
-import com.safetynet.alertsystem.repository.JsonReaderRepository;
 import com.safetynet.alertsystem.service.core.MedicalRecordService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -27,13 +27,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 public class MedicalRecordsControllerTest {
 
     @Mock
-    private MedicalRecordsController controller;
-    @Mock
     private MedicalRecordService service;
     @Mock
     private MedicalRecord record;
-    @Autowired
-    private JsonReaderRepository jsonReader;
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -42,7 +38,7 @@ public class MedicalRecordsControllerTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        controller = new MedicalRecordsController(service);
+        MedicalRecordsController controller = new MedicalRecordsController(service);
         objectMapper = new ObjectMapper();
         record = new MedicalRecord("John",
                 "Doe",
@@ -116,7 +112,7 @@ public class MedicalRecordsControllerTest {
     @Test
     void testDeletingRecordNotFound() throws Exception {
 
-        mockMvc.perform(delete("/medicalRecord/John/Doe"))
+        mockMvc.perform(delete("/medicalRecord/Jane/Doe"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().string("Medical record not found"));
     }

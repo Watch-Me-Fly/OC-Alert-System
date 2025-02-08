@@ -97,9 +97,6 @@ public class MedicalRecordService {
         String key = generateMapKey(firstName, lastName);
 
         MedicalRecord result = medicalRecords.get(key);
-        if (result == null) {
-            return null;
-        }
 
         logger.info("got {}'s medical record", key);
         logger.debug("Exiting getMedicalRecordByName, for : {} {}", key, result);
